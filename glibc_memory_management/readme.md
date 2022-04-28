@@ -8,7 +8,8 @@
    4. 堆 heap： 动态分配的内存空间(由程序员控制)
 2. 结合代码分析
 # glibc如何管理内存
-1. malloc做了什么  
+## malloc与虚拟内存 
+1. malloc做了什么
    调用`malloc(size_t)`时，会向系统**提交**“分配长度为size_t的**虚拟内存空间**”的请求，只有在访问到虚拟地址时才会分配物理空间。  
    这种策略被称为**OVERCOMMIT策略**
 2. [OVER COMMIT策略](http://www.wowotech.net/memory_management/overcommit.html)  
@@ -29,7 +30,27 @@
    sudo vi /etc/sysctl.conf # 修改 vm.overcommit_memory=0 或者 1 或者 2
    sysctl -p
    ```
-
+## The GNU Allocator
+1. 设计理念  
+   1. 减少碎片  
+   不限制分配空间(chunk)的大小为2的幂次，free函数可以合并任意两块相邻的空间，从而减少内存空间的碎片化
+   2. 支持多线程  
+   GNU C Library的malloc实现是将虚拟内存空间划分成多个**arena**，允许多点菜同时地(simultaneously)**在不同的arena**中分配空间
+2. [文档阅读](https://sourceware.org/glibc/wiki/MallocInternals)
+   1. 简述malloc中的3个重要名词 arena->heap->chunk  
+      1. arena：每一个arena中包括多个heap，被一个/多个线程共享
+      2. heap：每个heap是一段连续的虚拟内存，其中包括多个chunk
+      3. chunk：一小段可以被分配、释放、与其他chunk合并的虚拟内存
+   2. 
+3. 源码阅读
+   1. 源码下载
+   ```bash
+   cd ~
+   wget http://ftp.gnu.org/gnu/glibc/glibc-2.35.tar.bz2
+   tar -jxvf glibc-2.35.tar.bz2
+   cd ~/glibc-2.35/malloc
+   ```
+   1. 源码解析
 # references
 1. [在malloc上添加PTRDIFF_MAX限制的原因](https://sourceware.org/bugzilla/show_bug.cgi?id=23741#c2)
 2. [OVER COMMIT策略](http://www.wowotech.net/memory_management/overcommit.html)
