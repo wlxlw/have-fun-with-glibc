@@ -24,9 +24,11 @@ int main() {
     printf("Welcome to per thread arena example::%d %ld\n",getpid(),pthread_self());
     printf("Before malloc in main thread\n");
     getchar();
-    addr = (char*) malloc(1024*150);
+    addr = (char*) malloc(1024*150); //调用mmap
     printf("addr:%p-%p\n",addr,addr+1024*150);
-    addr = (char*) malloc(1024*100);
+    addr = (char*) malloc(1024*100);    //在heap上申请空间
+    printf("addr:%p-%p\n",addr,addr+1024*100);
+    addr = (char*) malloc(1024*100);    //在heap上申请空间，调用brk,heap扩容
     printf("addr:%p-%p\n",addr,addr+1024*100);
     // 7f9f5f587000-7f9f5f5b0000
     // 7f9f5f587010-7f9f5f5ac810
