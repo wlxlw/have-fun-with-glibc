@@ -18,7 +18,7 @@ void* threadFunc(void* arg) {
     getchar();
 }
 int main() {
-    pthread_t t1,t2;
+    pthread_t t1;
     void* s;
     int ret;
     char* addr;
