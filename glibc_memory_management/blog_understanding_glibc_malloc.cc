@@ -9,7 +9,8 @@
 void* threadFunc(void* arg) {
     printf("Before malloc in thread 1 %ld\n",pthread_self());
     getchar();
-    char* addr = (char*) malloc(1000);
+    char* addr = (char*) malloc(1024);
+    printf("thread_addr ALLOC 1KB :%p-%p\n",addr,addr+1024);
     printf("After malloc and before free in thread 1\n");
     getchar();
     free(addr);
@@ -17,7 +18,7 @@ void* threadFunc(void* arg) {
     getchar();
 }
 int main() {
-    pthread_t t1;
+    pthread_t t1,t2;
     void* s;
     int ret;
     char* addr;
@@ -25,13 +26,13 @@ int main() {
     printf("Before malloc in main thread\n");
     getchar();
     addr = (char*) malloc(1024*150); //调用mmap
-    printf("addr:%p-%p\n",addr,addr+1024*150);
+    printf("main_addr ALLOC 150KB:%p-%p\n",addr,addr+1024*150);
     addr = (char*) malloc(1024*100);    //在heap上申请空间
-    printf("addr:%p-%p\n",addr,addr+1024*100);
+    printf("main_addr ALLOC 100KB:%p-%p\n",addr,addr+1024*100);
+    getchar();
     addr = (char*) malloc(1024*100);    //在heap上申请空间，调用brk,heap扩容
-    printf("addr:%p-%p\n",addr,addr+1024*100);
-    // 7f9f5f587000-7f9f5f5b0000
-    // 7f9f5f587010-7f9f5f5ac810
+    printf("main_addr ALLOC 100KB:%p-%p\n",addr,addr+1024*100);
+
     printf("After malloc and before free in main thread\n");
     getchar();
     free(addr);

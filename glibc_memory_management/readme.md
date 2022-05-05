@@ -38,17 +38,7 @@
       cd ~/have-fun-with-glibc/glibc_memory_management
       g++ -pthread blog_understanding_glibc_malloc.cc # 多线程编译
       ./a.out
-      # output
-      # Welcome to per thread arena example::20093
-      # Before malloc in main thread
-      cat /proc/20093/maps # 每次运行线程id都不同，需要替换
-      # output
-      # 55668c914000-55668c935000 rw-p 00000000 00:00 0                          [heap]
-      回车 # 按下回车
-      # output 
-      # After malloc and before free in main thread
-
-      # 55668c914000-55668c935000 rw-p 00000000 00:00 0                          [heap]
+      cat /proc/<pid>/maps | grep -n -v "/" # 根据程序的提示，使用此行的指令查看不同时刻虚拟内存的状态
       ```
 ### 设计理念  
    1. 减少碎片  
